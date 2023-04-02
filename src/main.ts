@@ -4,8 +4,9 @@ import { Client, Events, GatewayIntentBits } from "discord.js";
 import Ping from "./plugins.ts/ping";
 import Here from "./plugins.ts/here";
 import Grade from "./plugins.ts/grade";
+import ModalCallback from "./plugins.ts/modalCallback";
 
-const regsiteredCommands = [Ping, Here, Grade];
+const regsiteredCommands = [Ping, Here, Grade, ModalCallback];
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
