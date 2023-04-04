@@ -14,7 +14,6 @@ export default async function ModalCallback(interaction: Interaction<CacheType>)
     if(interaction.customId === "join-main" || interaction.customId === "join-tmp"){
         if(!interaction.member)
             return;
-        
 
         let studentID = interaction.fields.getTextInputValue("student-id");
         const studentName = interaction.fields.getTextInputValue("student-name");
@@ -22,15 +21,15 @@ export default async function ModalCallback(interaction: Interaction<CacheType>)
         studentID = zenkaku2Hankaku(studentID);
         
         let targetRoleName = "";
-        // 本参加の場合は年度にする
         if(interaction.customId === "join-main"){
+            // 本参加の場合は年度にする
             const year = studentID.slice(2,4);
-
             targetRoleName = `20${year}年度`;
         }else{
             targetRoleName = "仮参加";
         }
         
+        // ロールを取得
         const role = interaction.guild?.roles.cache.find(role => role.name === targetRoleName);
         if(!role){
             await interaction.reply({
@@ -39,20 +38,22 @@ export default async function ModalCallback(interaction: Interaction<CacheType>)
             });
             return;
         }
-        const memberRoels = interaction.member.roles as GuildMemberRoleManager;
 
-        memberRoels.cache.forEach((role: Role) => {
+        // 年度とかの他ロールの削除
+        const memberRoles = interaction.member.roles as GuildMemberRoleManager;
+        memberRoles.cache.forEach((role: Role) => {
             if(role.name.includes("年度") || role.name === "仮参加")
-                memberRoels.remove(role);
+                memberRoles.remove(role);
         });
 
-        memberRoels.add(role);
+        memberRoles.add(role);
         
         await interaction.reply({
             content: `${targetRoleName}として参加しました。変更する場合は上から変更してください。`,
             ephemeral: true
         });
 
+        // 管理チャンネルに情報を投下
         await ((await (interaction.client.channels.fetch(process.env.LOG_CHANNEL || "")) as TextChannel).send({
             content: `${interaction.customId},${studentID},${studentName},${studentPhone}`
         }));
