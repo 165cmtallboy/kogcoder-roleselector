@@ -11,16 +11,11 @@ export default async function Grade(interaction: Interaction<CacheType>){
             .setCustomId(interaction.customId)
             .setTitle(main?"本参加":"仮参加" + "申請書");
 
-        // Add components to modal
-
-        // Create the text input components
         const studentIDInput = new TextInputBuilder()
             .setCustomId("student-id")
-        // The label is the prompt the user sees for this input
             .setLabel("学籍番号(半角)")
             .setPlaceholder("J01122334")
             .setRequired(true)
-        // Short means only a single line of text
             .setStyle(TextInputStyle.Short);
 
         const studentNameInput = new TextInputBuilder()
@@ -38,14 +33,11 @@ export default async function Grade(interaction: Interaction<CacheType>){
             .setRequired(true)
             .setStyle(TextInputStyle.Short);
 
-        // An action row only holds one text input,
-        // so you need one action row per text input.
         const firstActionRow = new ActionRowBuilder<TextInputBuilder>().addComponents(studentIDInput);
         const secondActionRow = new ActionRowBuilder<TextInputBuilder>().addComponents(studentNameInput);
         const thirdActionRow = new ActionRowBuilder<TextInputBuilder>().addComponents(studentPhoneNumber);
 
-        // Add inputs to the modal
-        // ts-ignore
+        
         modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
         await interaction.showModal(modal);
     }
